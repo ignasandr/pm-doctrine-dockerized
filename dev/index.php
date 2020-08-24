@@ -1,5 +1,8 @@
 <?php
-    require_once "bootstrap.php";
+    include_once "bootstrap.php";
+    include_once "./src/Project.php";
+    include_once "./src/ProjectStaff.php";
+    include_once "./src/Staff.php";
 
     $servername = "pm-db";
     $username = getenv('MYSQL_USER');
@@ -17,62 +20,62 @@
         $id_to_delete = $_POST['id'];
         $from_table = $_POST['table'];
 
-        $sql = "DELETE FROM $from_table WHERE id = $id_to_delete";
+        if ($from_table == 'projects') {
+            $entry = $entityManager->find('Project', $id_to_delete);
+        } else if ($from_table == 'staff') {
+            $entry = $entityManager->find('Staff', $id_to_delete);
+        }
 
-        $conn -> query($sql);
+        $entityManager->remove($entry);
+        $entityManager->flush();
     }
 
     if(isset($_POST['insert'])){
         $name_to_insert = $_POST['new_item'];
         $to_table = $_POST['table'];
 
-        $sql = "INSERT INTO $to_table (name)
-                VALUES ('$name_to_insert')";
+        if ($to_table == 'projects') {
+            $entry = new Project();
+        } else if ($to_table == 'staff') {
+            $entry = new Staff();
+        }
 
-        $conn -> query($sql);
+        $entry->setName($name_to_insert);
+        $entityManager->persist($entry);
+        $entityManager->flush();
     }
 
     if(isset($_POST['update_project'])) {
         $name_to_update = $_POST['update_name'];
-        $to_table = $_POST['table'];
         $id = $_POST['id'];
 
-        $sql = "UPDATE $to_table SET name='$name_to_update' WHERE id=$id";
-        
-        $conn -> query($sql);
-        // if (mysqli_query($conn, $sql)) {
-        //     echo "Record updated successfully";
-        // } else {
-        // echo "Error updating record: " . mysqli_error($conn);
-        // }
+        $entry = $entityManager->find('Project', $id);
+        $entry->setName($name_to_update);
+        $entityManager->flush();
     }
 
 
     if(isset($_POST['update_staff'])) {
         $name_to_update = $_POST['update_name'];
-        $to_table = $_POST['table'];
         $id = $_POST['id'];
-        $update_project = $_POST['update_project'];
+        $project_id = $_POST['assign_project'];
 
-        $sql = "UPDATE $to_table SET name='$name_to_update' WHERE id=$id";
-         
-        $conn -> query($sql);
+        $entry = $entityManager->find('Staff', $id);
+        $entry->setName($name_to_update);
+        $entityManager->flush();
 
-        if ($update_project > 0); {
-            $sql = 'SELECT projectid, staffid FROM projectstaff';
-            $result = mysqli_query($conn, $sql);
-            $projectstaff = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            mysqli_free_result($result);
-
-            if (empty(search($projectstaff, 'staffid', $id))) {
-                $sql = "INSERT INTO projectstaff (projectid, staffid)
-                    VALUES ('$update_project', '$id')";
+        if ($project_id > 0) {
+            if(is_null($entityManager->find('ProjectStaff', $id))){
+                $entry = new ProjectStaff();
+                $entry->setStaffId($id);
+                $entry->setProjectId($project_id);
+                $entityManager->persist($entry);
             } else {
-                $sql = "UPDATE projectstaff SET projectid='$update_project' WHERE staffid=$id";
+                $entry = $entityManager->find('ProjectStaff', $id);
+                $entry->setProjectId($project_id);
             }
-
-            $conn -> query($sql);
-        }
+            $entityManager->flush();
+        } 
     }
         
     

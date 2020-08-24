@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="projects")
  */
 
- class Projects {
+ class Project {
     /** @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue

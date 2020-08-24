@@ -1,5 +1,13 @@
 {
     "require": {
         "doctrine/orm": "^2.7"
+    },
+    "autoload": {
+        "files": [
+			"src/Project.php",
+			"src/ProjectStaff.php",
+			"src/Staff.php"
+		]
     }
 }
+

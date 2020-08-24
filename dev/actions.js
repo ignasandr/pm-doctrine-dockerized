@@ -73,11 +73,11 @@ function yourHandler(e){
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s6">
-                                                <select name="update_project">
-                                                    <option value="" disabled selected>Assign to project</option>
+                                                <select name="assign_project">
+                                                    <option value="" disabled selected></option>
                                                     ${printProjects()}
                                                 </select>
-                                                <label>Materialize Select</label>
+                                                <label>Assign to project</label>
                                             </div>
                                         </div> 
                                     </div>
