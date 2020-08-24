@@ -18,8 +18,11 @@ services:
   pm-db:
     build: ./db
     command: --default-authentication-plugin=mysql_native_password
+    container_name: pm-db
     ports:
       - 3306:3306
+    volumes:
+      - pm-db:/var/lib/mysql
     networks:
       pm-backend:
         ipv4_address: 172.10.3.2
@@ -29,8 +32,9 @@ services:
     build: ./www
     ports:
       - 8080:80
+    container_name: pm-www
     volumes:
-      - ./dev:/var/www/html/
+      - pm-www:/var/www/html/
     networks:
       pm-backend:
         ipv4_address: 172.10.2.2
@@ -40,3 +44,8 @@ services:
       - pm-db
     env_file:
       - ./development.env
+    # command: bash -c "cd /var/www/html && vendor/bin/doctrine orm:schema-tool:create"
+
+volumes:
+  pm-db:
+  pm-www:
