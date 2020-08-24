@@ -30,7 +30,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./src:/var/www/html/
+      - ./dev:/var/www/html/
     networks:
       pm-backend:
         ipv4_address: 172.10.2.2

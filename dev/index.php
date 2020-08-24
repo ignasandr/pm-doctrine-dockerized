@@ -1,4 +1,5 @@
 <?php
+    require_once "bootstrap.php";
 
     $servername = "pm-db";
     $username = getenv('MYSQL_USER');
