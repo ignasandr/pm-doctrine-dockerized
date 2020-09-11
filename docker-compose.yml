@@ -13,9 +13,9 @@ networks:
       driver: default
       config:
         - subnet: 172.10.2.0/23
-  # default:
-  #   external:
-  #     name: nginx-proxy
+  default:
+    external:
+      name: nginx-proxy
 
 services:
   pm-db:
@@ -46,7 +46,7 @@ services:
         ipv4_address: 172.10.2.2
       pm-frontend:
         ipv4_address: 172.10.1.2
-    network_mode: nginx-proxy
+      default:
     depends_on:
       - pm-db
     env_file:
